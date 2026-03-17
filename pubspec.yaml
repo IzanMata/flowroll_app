@@ -45,10 +45,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  fonts:
-    - family: BebasNeue
-      fonts:
-        - asset: assets/fonts/BebasNeue-Regular.ttf
   assets:
-    - assets/fonts/
     - assets/images/

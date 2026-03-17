@@ -8,7 +8,6 @@ import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/models/athlete.dart';
 import '../../../../shared/widgets/belt_badge.dart';
-import '../../../../shared/widgets/error_view.dart';
 import '../../domain/athletes_provider.dart';
 
 class AthleteFormScreen extends ConsumerStatefulWidget {

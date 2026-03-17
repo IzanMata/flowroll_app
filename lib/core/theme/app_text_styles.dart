@@ -3,10 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 abstract final class AppTextStyles {
-  // Display (Bebas Neue) — timers, scores, hero numbers
+  // Display (Bebas Neue via Google Fonts) — timers, scores, hero numbers
   static TextStyle display({Color color = AppColors.onBackground, double size = 96}) =>
-      TextStyle(
-        fontFamily: 'BebasNeue',
+      GoogleFonts.bebasNeue(
         fontSize: size,
         fontWeight: FontWeight.w400,
         color: color,

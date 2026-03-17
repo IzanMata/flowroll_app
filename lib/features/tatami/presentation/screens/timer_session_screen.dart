@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -129,8 +130,7 @@ class _TimerSessionScreenState extends ConsumerState<TimerSessionScreen>
                         children: [
                           Text(
                             '$mm:$ss',
-                            style: TextStyle(
-                              fontFamily: 'BebasNeue',
+                            style: GoogleFonts.bebasNeue(
                               fontSize: 88,
                               color: timerColor,
                               letterSpacing: 4,

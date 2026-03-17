@@ -22,8 +22,6 @@ class MatchesListScreen extends ConsumerStatefulWidget {
 }
 
 class _MatchesListScreenState extends ConsumerState<MatchesListScreen> {
-  bool _showCreateDialog = false;
-
   Future<void> _createMatch(BuildContext context) async {
     final aCtrl = TextEditingController();
     final bCtrl = TextEditingController();

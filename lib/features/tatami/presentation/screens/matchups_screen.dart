@@ -11,7 +11,6 @@ import '../../../../shared/widgets/app_shimmer.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/glass_card.dart';
 import '../../../../shared/widgets/status_badge.dart';
-import '../../../../shared/widgets/tappable.dart';
 import '../../domain/tatami_provider.dart';
 
 class MatchupsScreen extends ConsumerWidget {

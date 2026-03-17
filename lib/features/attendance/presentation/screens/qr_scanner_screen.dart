@@ -20,6 +20,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
   bool _processing = false;
   bool _success = false;
   String? _errorMessage;
+  bool _torchOn = false;
 
   @override
   void dispose() {
@@ -76,16 +77,14 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: ValueListenableBuilder(
-                      valueListenable: _controller.torchState,
-                      builder: (_, state, __) => Icon(
-                        state == TorchState.on
-                            ? Icons.flash_on_rounded
-                            : Icons.flash_off_rounded,
-                        color: Colors.white,
-                      ),
+                    icon: Icon(
+                      _torchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+                      color: Colors.white,
                     ),
-                    onPressed: _controller.toggleTorch,
+                    onPressed: () {
+                      _controller.toggleTorch();
+                      setState(() => _torchOn = !_torchOn);
+                    },
                   ),
                 ],
               ),
