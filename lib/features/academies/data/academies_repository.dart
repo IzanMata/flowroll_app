@@ -11,7 +11,7 @@ class AcademiesRepository {
 
   Future<PaginatedResponse<Academy>> listAcademies({int page = 1, String? search}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.academiesPath,
         queryParameters: {
           ApiConstants.pageParam: page,
@@ -29,7 +29,7 @@ class AcademiesRepository {
 
   Future<Academy> getAcademy(int id) async {
     try {
-      final response = await dio.get('${ApiConstants.academiesPath}$id/');
+      final response = await dio.get<Map<String, dynamic>>('${ApiConstants.academiesPath}$id/');
       return Academy.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
@@ -38,7 +38,7 @@ class AcademiesRepository {
 
   Future<Academy> createAcademy({required String name, String? city}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.academiesPath,
         data: {'name': name, if (city != null) 'city': city},
       );
@@ -50,7 +50,7 @@ class AcademiesRepository {
 
   Future<Academy> updateAcademy(int id, {required String name, String? city}) async {
     try {
-      final response = await dio.patch(
+      final response = await dio.patch<Map<String, dynamic>>(
         '${ApiConstants.academiesPath}$id/',
         data: {'name': name, if (city != null) 'city': city},
       );
@@ -62,7 +62,7 @@ class AcademiesRepository {
 
   Future<void> deleteAcademy(int id) async {
     try {
-      await dio.delete('${ApiConstants.academiesPath}$id/');
+      await dio.delete<void>('${ApiConstants.academiesPath}$id/');
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }

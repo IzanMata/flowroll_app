@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'api_constants.dart';
 import 'jwt_interceptor.dart';
 import '../auth/token_storage.dart';
@@ -20,11 +21,13 @@ class DioClient {
 
     _dio.interceptors.addAll([
       JwtInterceptor(tokenStorage: tokenStorage, dio: _dio),
-      LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        logPrint: (obj) => print(obj.toString()),
-      ),
+      if (kDebugMode)
+        LogInterceptor(
+          requestBody: false,
+          responseBody: false,
+          requestHeader: false,
+          logPrint: (obj) => debugPrint(obj.toString()),
+        ),
     ]);
   }
 

@@ -1,5 +1,8 @@
 abstract final class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080';
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8000',
+  );
 
   // Auth
   static const String tokenPath = '/api/auth/token/';

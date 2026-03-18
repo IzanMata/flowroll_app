@@ -12,7 +12,7 @@ class AuthRepository {
 
   Future<TokenPair> login({required String username, required String password}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.tokenPath,
         data: {'username': username, 'password': password},
       );

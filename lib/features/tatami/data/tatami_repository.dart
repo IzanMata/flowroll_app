@@ -18,7 +18,7 @@ class TatamiRepository {
     int? weightClass,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.matchupsPath,
         queryParameters: {
           ApiConstants.academyParam: academyId,
@@ -44,7 +44,7 @@ class TatamiRepository {
     int? weightClassId,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.pairAthletesPath,
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {
@@ -69,7 +69,7 @@ class TatamiRepository {
     int page = 1,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.timerPresetsPath,
         queryParameters: {
           ApiConstants.academyParam: academyId,
@@ -87,7 +87,7 @@ class TatamiRepository {
 
   Future<TimerSession> startSession({required int presetId, required int academyId}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.timerPresetsPath}$presetId/start_session/',
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {'preset': presetId},
@@ -101,7 +101,7 @@ class TatamiRepository {
   // Timer sessions
   Future<TimerSession> pauseSession({required int sessionId, required int academyId}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.timerSessionsPath}$sessionId/pause/',
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {'preset': 0},
@@ -114,7 +114,7 @@ class TatamiRepository {
 
   Future<TimerSession> finishSession({required int sessionId, required int academyId}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.timerSessionsPath}$sessionId/finish/',
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {'preset': 0},
@@ -128,7 +128,7 @@ class TatamiRepository {
   // Weight classes
   Future<PaginatedResponse<WeightClass>> listWeightClasses({int page = 1}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.weightClassesPath,
         queryParameters: {ApiConstants.pageParam: page},
       );

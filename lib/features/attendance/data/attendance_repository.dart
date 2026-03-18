@@ -18,7 +18,7 @@ class AttendanceRepository {
     DateTime? scheduledBefore,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.classesPath,
         queryParameters: {
           ApiConstants.academyParam: academyId,
@@ -40,7 +40,7 @@ class AttendanceRepository {
 
   Future<TrainingClass> getClass(int id) async {
     try {
-      final response = await dio.get('${ApiConstants.classesPath}$id/');
+      final response = await dio.get<Map<String, dynamic>>('${ApiConstants.classesPath}$id/');
       return TrainingClass.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
@@ -58,7 +58,7 @@ class AttendanceRepository {
     String? notes,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.classesPath,
         data: {
           'academy': academyId,
@@ -79,7 +79,7 @@ class AttendanceRepository {
 
   Future<QRCode> generateQr(int classId) async {
     try {
-      final response = await dio.post('${ApiConstants.classesPath}$classId/generate_qr/');
+      final response = await dio.post<Map<String, dynamic>>('${ApiConstants.classesPath}$classId/generate_qr/');
       return QRCode.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
@@ -88,7 +88,7 @@ class AttendanceRepository {
 
   Future<CheckIn> manualCheckIn({required int athleteId, required int trainingClassId}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.manualCheckinPath,
         data: {'athlete_id': athleteId, 'training_class_id': trainingClassId},
       );
@@ -100,7 +100,7 @@ class AttendanceRepository {
 
   Future<CheckIn> qrCheckIn({required String token}) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.qrCheckinPath,
         data: {'token': token},
       );
@@ -116,7 +116,7 @@ class AttendanceRepository {
     String? search,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.dropInsPath,
         queryParameters: {
           ApiConstants.academyParam: academyId,
@@ -143,7 +143,7 @@ class AttendanceRepository {
     int? trainingClassId,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.dropInsPath,
         data: {
           'academy': academyId,

@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android signing — nunca versionar
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+
+# Environment — nunca versionar
+.env
+
+# Coverage
+coverage/

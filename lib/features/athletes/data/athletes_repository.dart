@@ -16,7 +16,7 @@ class AthletesRepository {
     String? ordering,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.athletesPath,
         queryParameters: {
           'academy_id': academyId,
@@ -36,7 +36,7 @@ class AthletesRepository {
 
   Future<AthleteProfile> getAthlete(int id) async {
     try {
-      final response = await dio.get('${ApiConstants.athletesPath}$id/');
+      final response = await dio.get<Map<String, dynamic>>('${ApiConstants.athletesPath}$id/');
       return AthleteProfile.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
@@ -51,7 +51,7 @@ class AthletesRepository {
     int? stripes,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.athletesPath,
         data: {
           'user': userId,
@@ -75,7 +75,7 @@ class AthletesRepository {
     int? stripes,
   }) async {
     try {
-      final response = await dio.patch(
+      final response = await dio.patch<Map<String, dynamic>>(
         '${ApiConstants.athletesPath}$id/',
         data: {
           if (academyId != null) 'academy': academyId,
@@ -92,7 +92,7 @@ class AthletesRepository {
 
   Future<void> deleteAthlete(int id) async {
     try {
-      await dio.delete('${ApiConstants.athletesPath}$id/');
+      await dio.delete<void>('${ApiConstants.athletesPath}$id/');
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }

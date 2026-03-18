@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import '../auth/token_storage.dart';
 import 'api_constants.dart';
 
@@ -51,17 +52,20 @@ class JwtInterceptor extends Interceptor {
         return;
       }
 
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.tokenRefreshPath,
         data: {'refresh': refreshToken},
         options: Options(
           headers: {'Authorization': null},
           extra: {'skipInterceptor': true},
+          sendTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
         ),
       );
 
-      final newAccess = response.data['access'] as String;
-      final newRefresh = response.data['refresh'] as String?;
+      final data = response.data!;
+      final newAccess = data['access'] as String;
+      final newRefresh = data['refresh'] as String?;
 
       await tokenStorage.saveAccessToken(newAccess);
       if (newRefresh != null) {
@@ -113,6 +117,6 @@ class JwtInterceptor extends Interceptor {
   }
 
   bool _isAuthEndpoint(String path) =>
-      path.contains(ApiConstants.tokenPath) ||
-      path.contains(ApiConstants.tokenRefreshPath);
+      path == ApiConstants.tokenPath ||
+      path == ApiConstants.tokenRefreshPath;
 }

@@ -26,7 +26,7 @@ sealed class ApiException implements Exception {
     };
   }
 
-  static String _extractMessage(Response? response) {
+  static String _extractMessage(Response<dynamic>? response) {
     if (response?.data is Map) {
       final data = response!.data as Map<String, dynamic>;
       return data['detail']?.toString() ??
@@ -36,7 +36,7 @@ sealed class ApiException implements Exception {
     return 'Request failed (${response?.statusCode})';
   }
 
-  static Map<String, List<String>> _extractErrors(Response? response) {
+  static Map<String, List<String>> _extractErrors(Response<dynamic>? response) {
     if (response?.data is Map) {
       final data = response!.data as Map<String, dynamic>;
       return data.map((k, v) => MapEntry(

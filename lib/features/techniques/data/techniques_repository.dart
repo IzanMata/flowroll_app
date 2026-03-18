@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+
 import '../../../core/api/api_constants.dart';
 import '../../../core/api/api_exception.dart';
-import '../../../shared/models/technique.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../../../shared/models/technique.dart';
 
 class TechniquesRepository {
   TechniquesRepository({required this.dio});
@@ -11,11 +12,11 @@ class TechniquesRepository {
 
   Future<PaginatedResponse<Belt>> listBelts({int page = 1}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.beltsPath,
         queryParameters: {ApiConstants.pageParam: page},
       );
-      return PaginatedResponse.fromJson(response.data as Map<String, dynamic>, Belt.fromJson);
+      return PaginatedResponse.fromJson(response.data!, Belt.fromJson);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -26,17 +27,14 @@ class TechniquesRepository {
     String? search,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.techniqueCategoriesPath,
         queryParameters: {
           ApiConstants.pageParam: page,
           if (search != null && search.isNotEmpty) ApiConstants.searchParam: search,
         },
       );
-      return PaginatedResponse.fromJson(
-        response.data as Map<String, dynamic>,
-        TechniqueCategory.fromJson,
-      );
+      return PaginatedResponse.fromJson(response.data!, TechniqueCategory.fromJson);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -47,17 +45,14 @@ class TechniquesRepository {
     String? search,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.techniquesPath,
         queryParameters: {
           ApiConstants.pageParam: page,
           if (search != null && search.isNotEmpty) ApiConstants.searchParam: search,
         },
       );
-      return PaginatedResponse.fromJson(
-        response.data as Map<String, dynamic>,
-        Technique.fromJson,
-      );
+      return PaginatedResponse.fromJson(response.data!, Technique.fromJson);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -65,8 +60,8 @@ class TechniquesRepository {
 
   Future<Technique> getTechnique(int id) async {
     try {
-      final response = await dio.get('${ApiConstants.techniquesPath}$id/');
-      return Technique.fromJson(response.data as Map<String, dynamic>);
+      final response = await dio.get<Map<String, dynamic>>('${ApiConstants.techniquesPath}$id/');
+      return Technique.fromJson(response.data!);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -78,7 +73,7 @@ class TechniquesRepository {
     int? difficulty,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.techniquesPath,
         data: {
           'name': name,
@@ -86,7 +81,7 @@ class TechniquesRepository {
           if (difficulty != null) 'difficulty': difficulty,
         },
       );
-      return Technique.fromJson(response.data as Map<String, dynamic>);
+      return Technique.fromJson(response.data!);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -99,7 +94,7 @@ class TechniquesRepository {
     int? difficulty,
   }) async {
     try {
-      final response = await dio.patch(
+      final response = await dio.patch<Map<String, dynamic>>(
         '${ApiConstants.techniquesPath}$id/',
         data: {
           if (name != null) 'name': name,
@@ -107,7 +102,7 @@ class TechniquesRepository {
           if (difficulty != null) 'difficulty': difficulty,
         },
       );
-      return Technique.fromJson(response.data as Map<String, dynamic>);
+      return Technique.fromJson(response.data!);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -115,7 +110,7 @@ class TechniquesRepository {
 
   Future<void> deleteTechnique(int id) async {
     try {
-      await dio.delete('${ApiConstants.techniquesPath}$id/');
+      await dio.delete<void>('${ApiConstants.techniquesPath}$id/');
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -126,14 +121,14 @@ class TechniquesRepository {
     String? description,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.variationsPath,
         data: {
           'name': name,
           if (description != null) 'description': description,
         },
       );
-      return TechniqueVariation.fromJson(response.data as Map<String, dynamic>);
+      return TechniqueVariation.fromJson(response.data!);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }

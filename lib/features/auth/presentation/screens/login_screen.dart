@@ -41,6 +41,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             username: _usernameCtrl.text.trim(),
             password: _passwordCtrl.text,
           );
+      ref.invalidate(isAuthenticatedProvider);
       if (mounted) context.go('/home');
     } on ApiException catch (e) {
       setState(() => _error = e.message);

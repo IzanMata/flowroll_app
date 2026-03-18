@@ -1,35 +1,65 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenStorage {
-  static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
-
   static const _accessKey = 'fr_access_token';
   static const _refreshKey = 'fr_refresh_token';
 
-  Future<String?> getAccessToken() => _storage.read(key: _accessKey);
-  Future<String?> getRefreshToken() => _storage.read(key: _refreshKey);
+  // Used on Android / iOS only
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
+
+  Future<String?> getAccessToken() => _read(_accessKey);
+  Future<String?> getRefreshToken() => _read(_refreshKey);
 
   Future<void> saveTokens({required String access, required String refresh}) async {
     await Future.wait([
-      _storage.write(key: _accessKey, value: access),
-      _storage.write(key: _refreshKey, value: refresh),
+      _write(_accessKey, access),
+      _write(_refreshKey, refresh),
     ]);
   }
 
-  Future<void> saveAccessToken(String access) =>
-      _storage.write(key: _accessKey, value: access);
+  Future<void> saveAccessToken(String access) => _write(_accessKey, access);
 
   Future<void> clearAll() async {
     await Future.wait([
-      _storage.delete(key: _accessKey),
-      _storage.delete(key: _refreshKey),
+      _delete(_accessKey),
+      _delete(_refreshKey),
     ]);
   }
 
   Future<bool> hasTokens() async {
     final access = await getAccessToken();
     return access != null && access.isNotEmpty;
+  }
+
+  // ── Platform-aware helpers ──────────────────────────────────────────────
+
+  Future<String?> _read(String key) async {
+    if (kIsWeb) {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+    }
+    return _secureStorage.read(key: key);
+  }
+
+  Future<void> _write(String key, String value) async {
+    if (kIsWeb) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, value);
+    } else {
+      await _secureStorage.write(key: key, value: value);
+    }
+  }
+
+  Future<void> _delete(String key) async {
+    if (kIsWeb) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(key);
+    } else {
+      await _secureStorage.delete(key: key);
+    }
   }
 }

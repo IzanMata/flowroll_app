@@ -15,7 +15,7 @@ class MatchesRepository {
     String? search,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.matchesPath,
         queryParameters: {
           ApiConstants.academyParam: academyId,
@@ -34,7 +34,7 @@ class MatchesRepository {
 
   Future<Match> getMatch(int id, {required int academyId}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         '${ApiConstants.matchesPath}$id/',
         queryParameters: {ApiConstants.academyParam: academyId},
       );
@@ -51,7 +51,7 @@ class MatchesRepository {
     int? durationSeconds,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         ApiConstants.matchesPath,
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {
@@ -76,7 +76,7 @@ class MatchesRepository {
     required int academyId,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.matchesPath}$matchId/add_event/',
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {
@@ -102,7 +102,7 @@ class MatchesRepository {
     required int academyId,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.matchesPath}$matchId/finish_match/',
         queryParameters: {ApiConstants.academyParam: academyId},
         data: {
@@ -120,7 +120,7 @@ class MatchesRepository {
 
   Future<void> deleteMatch(int id, {required int academyId}) async {
     try {
-      await dio.delete(
+      await dio.delete<void>(
         '${ApiConstants.matchesPath}$id/',
         queryParameters: {ApiConstants.academyParam: academyId},
       );

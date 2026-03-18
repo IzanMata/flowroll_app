@@ -40,10 +40,12 @@ class MatchupsFilter {
       other is MatchupsFilter &&
       other.academyId == academyId &&
       other.page == page &&
-      other.status == status;
+      other.status == status &&
+      other.matchFormat == matchFormat &&
+      other.weightClass == weightClass;
 
   @override
-  int get hashCode => Object.hash(academyId, page, status);
+  int get hashCode => Object.hash(academyId, page, status, matchFormat, weightClass);
 }
 
 final timerPresetsProvider = FutureProvider.autoDispose.family<PaginatedResponse<TimerPreset>, int>(
@@ -64,27 +66,24 @@ class TimerSessionNotifier extends StateNotifier<TimerSessionState> {
   final int _academyId;
   Timer? _ticker;
   int _localElapsed = 0;
-  int roundDurationSeconds = 300;
+  int _roundDurationSeconds = 300;
 
   Future<void> startSession(int presetId) async {
     try {
       state = const TimerSessionState.loading();
       // Fetch preset first to get duration
       final presetsPage = await _repo.listTimerPresets(academyId: _academyId);
-      final preset = presetsPage.results.firstWhere(
-        (p) => p.id == presetId,
-        orElse: () => presetsPage.results.first,
-      );
-      roundDurationSeconds = preset.roundDurationSeconds ?? 300;
+      final preset = presetsPage.results.where((p) => p.id == presetId).firstOrNull;
+      _roundDurationSeconds = preset?.roundDurationSeconds ?? 300;
 
       final session = await _repo.startSession(presetId: presetId, academyId: _academyId);
       _localElapsed = session.elapsedSeconds;
       state = TimerSessionState.running(
         session: session,
         localElapsed: _localElapsed,
-        totalSeconds: roundDurationSeconds,
+        totalSeconds: _roundDurationSeconds,
       );
-      _startTicker(roundDurationSeconds);
+      _startTicker(_roundDurationSeconds);
     } catch (e) {
       state = TimerSessionState.error(e.toString());
     }
@@ -96,7 +95,7 @@ class TimerSessionNotifier extends StateNotifier<TimerSessionState> {
     if (session == null) return;
     try {
       final updated = await _repo.pauseSession(sessionId: session.id, academyId: _academyId);
-      state = TimerSessionState.paused(session: updated, localElapsed: _localElapsed, totalSeconds: roundDurationSeconds);
+      state = TimerSessionState.paused(session: updated, localElapsed: _localElapsed, totalSeconds: _roundDurationSeconds);
     } catch (e) {
       state = TimerSessionState.error(e.toString());
     }
@@ -105,8 +104,8 @@ class TimerSessionNotifier extends StateNotifier<TimerSessionState> {
   Future<void> resume() async {
     final session = state.session;
     if (session == null) return;
-    state = TimerSessionState.running(session: session, localElapsed: _localElapsed, totalSeconds: roundDurationSeconds);
-    _startTicker(roundDurationSeconds);
+    state = TimerSessionState.running(session: session, localElapsed: _localElapsed, totalSeconds: _roundDurationSeconds);
+    _startTicker(_roundDurationSeconds);
   }
 
   Future<void> finish() async {
@@ -130,7 +129,7 @@ class TimerSessionNotifier extends StateNotifier<TimerSessionState> {
         state = TimerSessionState.running(
           session: session,
           localElapsed: _localElapsed,
-          totalSeconds: roundDurationSeconds,
+          totalSeconds: _roundDurationSeconds,
         );
         if (_localElapsed >= totalSeconds) {
           _ticker?.cancel();
@@ -226,12 +225,9 @@ final class _Error extends TimerSessionState {
   final String message;
 }
 
-extension TimerSessionExtension on TimerSession {
-  int? get roundDurationSeconds => null; // resolved via preset
-}
-
 final timerSessionNotifierProvider =
     StateNotifierProvider<TimerSessionNotifier, TimerSessionState>((ref) {
-  final academyId = ref.watch(selectedAcademyIdProvider) ?? 0;
+  final academyId = ref.watch(selectedAcademyIdProvider);
+  if (academyId == null) return TimerSessionNotifier(ref.watch(tatamiRepositoryProvider), 0);
   return TimerSessionNotifier(ref.watch(tatamiRepositoryProvider), academyId);
 });
