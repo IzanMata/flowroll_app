@@ -1,0 +1,44 @@
+# FlowRoll — Claude ignore file
+# Files matching these patterns are excluded from Claude's context
+
+# Build artifacts
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Generated code (read the source .dart files instead)
+**/*.g.dart
+**/*.freezed.dart
+**/*.mocks.dart
+
+# Test artifacts
+coverage/
+test/golden/
+
+# Assets (binary — not useful for code assistance)
+assets/fonts/
+assets/images/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Dependencies (pubspec.yaml is sufficient)
+.pub-cache/
+
+# Human-facing documentation (too verbose for Claude's base context)
+README.md
+ARCHITECTURE.md
+CONTRIBUTING.md
+DEPLOYMENT.md
+CHANGELOG.md
+
+# Lock files
+pubspec.lock
+
+# Environment secrets
+.env

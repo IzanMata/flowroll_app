@@ -106,6 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 36),
                   // Username field
                   TextFormField(
+                    key: const Key('login_username_field'),
                     controller: _usernameCtrl,
                     style: AppTextStyles.bodyLarge(),
                     textInputAction: TextInputAction.next,
@@ -119,6 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
                   // Password field
                   TextFormField(
+                    key: const Key('login_password_field'),
                     controller: _passwordCtrl,
                     style: AppTextStyles.bodyLarge(),
                     obscureText: _obscurePassword,
@@ -170,6 +172,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 28),
                   // Sign in button
                   ElevatedButton(
+                    key: const Key('login_submit_button'),
                     onPressed: _loading ? null : _submit,
                     child: _loading
                         ? const SizedBox(
