@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/techniques_repository.dart';
+
 import '../../../core/api/providers.dart';
-import '../../../shared/models/technique.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../../../shared/models/technique.dart';
+import '../data/techniques_repository.dart';
 
 final techniquesRepositoryProvider = Provider<TechniquesRepository>((ref) {
   return TechniquesRepository(dio: ref.watch(dioProvider));

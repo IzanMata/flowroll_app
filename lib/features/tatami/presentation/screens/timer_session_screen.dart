@@ -1,10 +1,12 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/tatami_provider.dart';
 
 class TimerSessionScreen extends ConsumerStatefulWidget {
@@ -60,7 +62,7 @@ class _TimerSessionScreenState extends ConsumerState<TimerSessionScreen>
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,

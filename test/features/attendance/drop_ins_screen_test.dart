@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/attendance/data/attendance_repository.dart';
 import 'package:flowroll_app/features/attendance/domain/attendance_provider.dart';
 import 'package:flowroll_app/features/attendance/presentation/screens/drop_ins_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides({int? academyId = 1}) => [
+  List<Override> overrides({int? academyId = 1}) => [
         attendanceRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier(academyId)),
       ];
@@ -28,7 +27,7 @@ void main() {
     testWidgets('shows select-academy message when no academy', (tester) async {
       await tester.pumpApp(
         const DropInsScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
 
       expect(find.text('Select an academy'), findsOneWidget);
@@ -41,7 +40,7 @@ void main() {
         fakeDropIn(firstName: 'Carlos', lastName: 'Gracie'),
       ]));
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Carlos Gracie'), findsOneWidget);
@@ -52,7 +51,7 @@ void main() {
         fakeDropIn(email: 'carlos@bjj.com'),
       ]));
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('carlos@bjj.com'), findsOneWidget);
@@ -61,7 +60,7 @@ void main() {
     testWidgets('shows empty view when no drop-ins', (tester) async {
       mockRepo.stubListDropIns(emptyPage());
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('No drop-in visitors'), findsOneWidget);
@@ -71,7 +70,7 @@ void main() {
       when(() => mockRepo.listDropIns(academyId: any(named: 'academyId')))
           .thenThrow(Exception('Server error'));
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -82,7 +81,7 @@ void main() {
     testWidgets('shows person_add icon button in appbar', (tester) async {
       mockRepo.stubListDropIns(emptyPage());
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.person_add_rounded), findsOneWidget);
@@ -91,7 +90,7 @@ void main() {
     testWidgets('tapping add button opens bottom sheet', (tester) async {
       mockRepo.stubListDropIns(emptyPage());
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.person_add_rounded));
@@ -109,7 +108,7 @@ void main() {
     testWidgets('shows validation errors when submitting empty form', (tester) async {
       mockRepo.stubListDropIns(emptyPage());
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.person_add_rounded));
@@ -128,7 +127,7 @@ void main() {
       when(() => mockRepo.listDropIns(academyId: any(named: 'academyId')))
           .thenAnswer((_) async => fakeDropInsPage([fakeDropIn()]));
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.person_add_rounded));
@@ -156,7 +155,7 @@ void main() {
       mockRepo.stubListDropIns(emptyPage());
       mockRepo.stubCreateDropInFails(Exception('Email already registered'));
 
-      await tester.pumpApp(const DropInsScreen(), overrides: _overrides());
+      await tester.pumpApp(const DropInsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.person_add_rounded));

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -35,7 +36,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future<void>.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
     final isAuth = await ref.read(authRepositoryProvider).isAuthenticated();
     if (!mounted) return;
@@ -56,7 +57,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
         child: Center(
           child: FadeTransition(

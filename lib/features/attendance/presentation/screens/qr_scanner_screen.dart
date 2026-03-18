@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/attendance_provider.dart';
 
 class QrScannerScreen extends ConsumerStatefulWidget {
@@ -42,7 +43,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
       await ref.read(attendanceRepositoryProvider).qrCheckIn(token: code);
       await HapticFeedback.heavyImpact();
       setState(() => _success = true);
-      await Future.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
       if (mounted) context.pop();
     } catch (e) {
       await HapticFeedback.vibrate();
@@ -334,7 +335,7 @@ class _CornerPainter extends CustomPainter {
       canvas.drawLine(Offset(0, h), const Offset(0, 0), paint);
       canvas.drawLine(const Offset(0, 0), Offset(w, 0), paint);
     } else if (position.top && !position.left) {
-      canvas.drawLine(Offset(0, 0), Offset(w, 0), paint);
+      canvas.drawLine(const Offset(0, 0), Offset(w, 0), paint);
       canvas.drawLine(Offset(w, 0), Offset(w, h), paint);
     } else if (!position.top && position.left) {
       canvas.drawLine(const Offset(0, 0), Offset(0, h), paint);

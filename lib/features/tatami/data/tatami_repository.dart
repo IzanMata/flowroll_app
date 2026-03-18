@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+
 import '../../../core/api/api_constants.dart';
 import '../../../core/api/api_exception.dart';
-import '../../../shared/models/tatami.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../../../shared/models/tatami.dart';
 
 class TatamiRepository {
   TatamiRepository({required this.dio});

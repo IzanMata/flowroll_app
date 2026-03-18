@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
+import '../auth/token_storage.dart';
 import 'api_constants.dart';
 import 'jwt_interceptor.dart';
-import '../auth/token_storage.dart';
 
 class DioClient {
   DioClient({required TokenStorage tokenStorage}) {

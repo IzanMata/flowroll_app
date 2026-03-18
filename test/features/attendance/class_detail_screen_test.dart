@@ -1,4 +1,3 @@
-import 'package:flowroll_app/features/attendance/data/attendance_repository.dart';
 import 'package:flowroll_app/features/attendance/domain/attendance_provider.dart';
 import 'package:flowroll_app/features/attendance/presentation/screens/class_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         attendanceRepositoryProvider.overrideWithValue(mockRepo),
       ];
 
@@ -28,7 +27,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -40,7 +39,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -53,7 +52,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -66,7 +65,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -78,7 +77,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -90,7 +89,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -104,7 +103,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -120,7 +119,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -142,7 +141,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -165,7 +164,7 @@ void main() {
 
       await tester.pumpApp(
         const ClassDetailScreen(classId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 

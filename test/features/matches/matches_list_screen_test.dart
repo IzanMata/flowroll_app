@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/matches/data/matches_repository.dart';
 import 'package:flowroll_app/features/matches/domain/matches_provider.dart';
 import 'package:flowroll_app/features/matches/presentation/screens/matches_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides({int? academyId = 1}) => [
+  List<Override> overrides({int? academyId = 1}) => [
         matchesRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier(academyId)),
       ];
@@ -28,7 +27,7 @@ void main() {
     testWidgets('shows select-academy prompt when no academy', (tester) async {
       await tester.pumpApp(
         const MatchesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -42,7 +41,7 @@ void main() {
         fakeMatch(),
       ]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('athlete_a'), findsOneWidget);
@@ -52,7 +51,7 @@ void main() {
     testWidgets('shows VS text', (tester) async {
       mockRepo.stubListMatches(fakeMatchesPage([fakeMatch()]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('VS'), findsOneWidget);
@@ -63,7 +62,7 @@ void main() {
         fakeMatch(isFinished: true, winner: 1),
       ]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('FINISHED'), findsOneWidget);
@@ -72,7 +71,7 @@ void main() {
     testWidgets('shows live indicator for in-progress matches', (tester) async {
       mockRepo.stubListMatches(fakeMatchesPage([fakeMatch(isFinished: false)]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       // Live indicator is a small colored circle, not FINISHED badge
@@ -84,7 +83,7 @@ void main() {
         fakeMatch(scoreA: 4, scoreB: 2),
       ]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('4'), findsOneWidget);
@@ -94,7 +93,7 @@ void main() {
     testWidgets('shows empty view when no matches', (tester) async {
       mockRepo.stubListMatches(emptyPage());
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('No matches'), findsOneWidget);
@@ -107,7 +106,7 @@ void main() {
             search: any(named: 'search'),
           )).thenThrow(Exception('timeout'));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -118,7 +117,7 @@ void main() {
         fakeMatch(isFinished: true, winner: 1, scoreA: 3, scoreB: 0),
       ]));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('athlete_a'), findsWidgets);
@@ -130,7 +129,7 @@ void main() {
     testWidgets('FAB is always visible (even without academy)', (tester) async {
       await tester.pumpApp(
         const MatchesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -140,7 +139,7 @@ void main() {
     testWidgets('tapping FAB does nothing when no academy selected', (tester) async {
       await tester.pumpApp(
         const MatchesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -154,7 +153,7 @@ void main() {
     testWidgets('tapping FAB opens new-match bottom sheet', (tester) async {
       mockRepo.stubListMatches(emptyPage());
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byType(FloatingActionButton));
@@ -168,7 +167,7 @@ void main() {
     testWidgets('does not call createMatch when IDs are empty', (tester) async {
       mockRepo.stubListMatches(emptyPage());
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byType(FloatingActionButton));
@@ -188,7 +187,7 @@ void main() {
       mockRepo.stubListMatches(emptyPage());
       mockRepo.stubCreateMatchFails(Exception('Athlete not found'));
 
-      await tester.pumpApp(const MatchesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const MatchesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byType(FloatingActionButton));

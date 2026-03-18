@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Wraps any widget with scale + opacity micro-interaction on tap.
 class Tappable extends StatefulWidget {
@@ -47,6 +48,7 @@ class _TappableState extends State<Tappable> with SingleTickerProviderStateMixin
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
         _controller.reverse();
+        HapticFeedback.selectionClick();
         widget.onTap();
       },
       onTapCancel: () => _controller.reverse(),

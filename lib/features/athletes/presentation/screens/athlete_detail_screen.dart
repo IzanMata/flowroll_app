@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/belt_badge.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/glass_card.dart';
@@ -30,7 +31,7 @@ class AthleteDetailScreen extends ConsumerWidget {
               pinned: true,
               backgroundColor: AppColors.surface,
               flexibleSpace: FlexibleSpaceBar(
-                background: Container(
+                background: DecoratedBox(
                   decoration: const BoxDecoration(gradient: AppColors.cardGradient),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

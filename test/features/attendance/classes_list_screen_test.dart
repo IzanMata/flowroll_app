@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/attendance/data/attendance_repository.dart';
 import 'package:flowroll_app/features/attendance/domain/attendance_provider.dart';
 import 'package:flowroll_app/features/attendance/presentation/screens/classes_list_screen.dart';
 import 'package:flowroll_app/shared/models/attendance.dart';
@@ -24,7 +23,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides({int? academyId = 1}) => [
+  List<Override> overrides({int? academyId = 1}) => [
         attendanceRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier(academyId)),
       ];
@@ -33,7 +32,7 @@ void main() {
     testWidgets('shows select-academy prompt when no academy selected', (tester) async {
       await tester.pumpApp(
         const ClassesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -44,7 +43,7 @@ void main() {
     testWidgets('does not show FAB when no academy', (tester) async {
       await tester.pumpApp(
         const ClassesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -64,7 +63,7 @@ void main() {
           )).thenAnswer((_) async =>
           fakeClassesPage([fakeClass(title: 'Morning Gi')]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Morning Gi'), findsOneWidget);
@@ -81,10 +80,10 @@ void main() {
           )).thenAnswer((_) async =>
           fakeClassesPage([fakeClass(attendanceCount: 12)]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
-      expect(find.text('12'), findsOneWidget);
+      expect(find.text('12'), findsWidgets); // appears in stats header + card badge
       expect(find.text('checked in'), findsOneWidget);
     });
 
@@ -98,7 +97,7 @@ void main() {
             scheduledBefore: any(named: 'scheduledBefore'),
           )).thenAnswer((_) async => fakeClassesPage([]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('No classes'), findsOneWidget);
@@ -114,7 +113,7 @@ void main() {
             scheduledBefore: any(named: 'scheduledBefore'),
           )).thenThrow(Exception('Server error'));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -132,7 +131,7 @@ void main() {
             scheduledBefore: any(named: 'scheduledBefore'),
           )).thenAnswer((_) async => fakeClassesPage([]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.qr_code_scanner_rounded), findsOneWidget);
@@ -148,7 +147,7 @@ void main() {
             scheduledBefore: any(named: 'scheduledBefore'),
           )).thenAnswer((_) async => fakeClassesPage([]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
 
       expect(find.byIcon(Icons.school_rounded), findsOneWidget);
     });
@@ -165,7 +164,7 @@ void main() {
             scheduledBefore: any(named: 'scheduledBefore'),
           )).thenAnswer((_) async => fakeClassesPage([]));
 
-      await tester.pumpApp(const ClassesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const ClassesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.byType(FloatingActionButton), findsOneWidget);

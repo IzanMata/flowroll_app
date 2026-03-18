@@ -17,7 +17,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         techniquesRepositoryProvider.overrideWithValue(mockRepo),
       ];
 
@@ -25,7 +25,7 @@ void main() {
     testWidgets('shows belt tabs', (tester) async {
       mockRepo.stubListTechniques(emptyPage());
 
-      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: _overrides());
+      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('White'), findsOneWidget);
@@ -40,7 +40,7 @@ void main() {
         fakeTechnique(name: 'Armbar', minBelt: 'white'),
       ]));
 
-      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: _overrides());
+      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Armbar'), findsOneWidget);
@@ -52,7 +52,7 @@ void main() {
         fakeTechnique(name: 'Triangle', minBelt: 'blue'),
       ]));
 
-      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: _overrides());
+      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('No white belt techniques'), findsOneWidget);
@@ -64,7 +64,7 @@ void main() {
             search: any(named: 'search'),
           )).thenThrow(Exception('Server error'));
 
-      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: _overrides());
+      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -75,7 +75,7 @@ void main() {
     testWidgets('shows search bar', (tester) async {
       mockRepo.stubListTechniques(emptyPage());
 
-      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: _overrides());
+      await tester.pumpApp(const TechniquesCurriculumScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.byType(TextField), findsOneWidget);

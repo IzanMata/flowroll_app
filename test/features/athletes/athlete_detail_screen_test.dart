@@ -1,4 +1,3 @@
-import 'package:flowroll_app/features/athletes/data/athletes_repository.dart';
 import 'package:flowroll_app/features/athletes/domain/athletes_provider.dart';
 import 'package:flowroll_app/features/athletes/presentation/screens/athlete_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         athletesRepositoryProvider.overrideWithValue(mockRepo),
       ];
 
@@ -28,7 +27,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -40,7 +39,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -52,7 +51,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -64,7 +63,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -76,7 +75,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -89,7 +88,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 999),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 
@@ -103,7 +102,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteDetailScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
       await tester.pumpAndSettle();
 

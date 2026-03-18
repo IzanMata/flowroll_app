@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/attendance_repository.dart';
+
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_provider.dart';
 import '../../../shared/models/attendance.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../data/attendance_repository.dart';
 
 final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
   return AttendanceRepository(dio: ref.watch(dioProvider));

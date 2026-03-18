@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/athlete.dart';
+import '../../../../shared/widgets/app_search_bar.dart';
 import '../../../../shared/widgets/app_shimmer.dart';
 import '../../../../shared/widgets/belt_badge.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/glass_card.dart';
-import '../../../../shared/widgets/app_search_bar.dart';
 import '../../../../shared/widgets/tappable.dart';
 import '../../domain/athletes_provider.dart';
 
@@ -136,12 +137,15 @@ class _AthleteCard extends StatelessWidget {
       child: GlassCard(
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.surfaceVariant,
-              child: Text(
-                athlete.username.substring(0, 1).toUpperCase(),
-                style: AppTextStyles.titleMedium(color: AppColors.primary),
+            Hero(
+              tag: 'athlete-${athlete.id}',
+              child: CircleAvatar(
+                radius: 24,
+                backgroundColor: AppColors.surfaceVariant,
+                child: Text(
+                  athlete.username.substring(0, 1).toUpperCase(),
+                  style: AppTextStyles.titleMedium(color: AppColors.primary),
+                ),
               ),
             ),
             const SizedBox(width: 14),

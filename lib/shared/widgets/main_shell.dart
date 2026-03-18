@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_strings.dart';
@@ -41,7 +42,7 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: const BoxDecoration(
         color: AppColors.surface,
         border: Border(top: BorderSide(color: AppColors.surfaceBorder, width: 1)),
@@ -52,6 +53,7 @@ class _BottomNav extends StatelessWidget {
           elevation: 0,
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) {
+            HapticFeedback.lightImpact();
             context.go(_tabs[index].path);
           },
           destinations: _tabs.map((tab) {

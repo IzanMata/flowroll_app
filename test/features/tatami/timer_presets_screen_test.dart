@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/tatami/data/tatami_repository.dart';
 import 'package:flowroll_app/features/tatami/domain/tatami_provider.dart';
 import 'package:flowroll_app/features/tatami/presentation/screens/timer_presets_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +17,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides({int? academyId = 1}) => [
+  List<Override> overrides({int? academyId = 1}) => [
         tatamiRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier(academyId)),
       ];
@@ -29,7 +28,7 @@ void main() {
         fakeTimerPreset(name: '5 Minute Rounds'),
       ]));
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('5 Minute Rounds'), findsOneWidget);
@@ -40,7 +39,7 @@ void main() {
         fakeTimerPreset(roundDurationSeconds: 300), // 5m
       ]));
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('5m'), findsOneWidget);
@@ -51,7 +50,7 @@ void main() {
         fakeTimerPreset(),
       ]));
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Start Timer'), findsOneWidget);
@@ -63,7 +62,7 @@ void main() {
         fakeTimerPreset(id: 2, name: 'Preset B'),
       ]));
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Preset A'), findsOneWidget);
@@ -74,7 +73,7 @@ void main() {
     testWidgets('shows empty view when no presets', (tester) async {
       mockRepo.stubListPresets(emptyPage());
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('No timer presets'), findsOneWidget);
@@ -84,7 +83,7 @@ void main() {
       when(() => mockRepo.listTimerPresets(academyId: any(named: 'academyId')))
           .thenThrow(Exception('Server error'));
 
-      await tester.pumpApp(const TimerPresetsScreen(), overrides: _overrides());
+      await tester.pumpApp(const TimerPresetsScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);

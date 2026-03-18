@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../shared/models/tatami.dart';
 import '../../shared/models/attendance.dart';
+import '../../shared/models/tatami.dart';
 
 class StatusBadge extends StatelessWidget {
   const StatusBadge({super.key, required this.label, required this.color});

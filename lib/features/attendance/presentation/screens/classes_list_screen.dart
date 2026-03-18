@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
-import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/attendance.dart';
 import '../../../../shared/widgets/app_shimmer.dart';
 import '../../../../shared/widgets/error_view.dart';
@@ -60,23 +60,46 @@ class ClassesListScreen extends ConsumerWidget {
               backgroundColor: AppColors.surface,
               onRefresh: () async => ref.invalidate(todaysClassesProvider),
               child: classesAsync.when(
-                loading: () => const ShimmerList(count: 4),
+                loading: () => const Column(
+                  children: [
+                    _StatsHeaderShimmer(),
+                    Expanded(child: ShimmerList(count: 4)),
+                  ],
+                ),
                 error: (e, _) => ErrorView(
                   message: e.toString(),
                   onRetry: () => ref.invalidate(todaysClassesProvider),
                 ),
                 data: (classes) {
-                  if (classes.isEmpty) {
-                    return const EmptyView(
-                      icon: Icons.event_rounded,
-                      message: AppStrings.noClasses,
-                    );
-                  }
-                  return ListView.separated(
-                    padding: AppSpacing.screenPadding,
-                    itemCount: classes.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (_, i) => _ClassCard(trainingClass: classes[i]),
+                  final totalCheckins = classes.fold<int>(
+                    0,
+                    (sum, c) => sum + c.attendanceCount,
+                  );
+                  return CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: _StatsHeader(
+                          classCount: classes.length,
+                          totalCheckins: totalCheckins,
+                        ),
+                      ),
+                      if (classes.isEmpty)
+                        const SliverFillRemaining(
+                          child: EmptyView(
+                            icon: Icons.event_rounded,
+                            message: AppStrings.noClasses,
+                          ),
+                        )
+                      else
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          sliver: SliverList.separated(
+                            itemCount: classes.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            itemBuilder: (_, i) => _ClassCard(trainingClass: classes[i]),
+                          ),
+                        ),
+                    ],
                   );
                 },
               ),
@@ -88,6 +111,135 @@ class ClassesListScreen extends ConsumerWidget {
               label: const Text(AppStrings.dropIns),
             )
           : null,
+    );
+  }
+}
+
+// ─── Dashboard stats header ──────────────────────────────────────────────────
+
+class _StatsHeader extends StatelessWidget {
+  const _StatsHeader({required this.classCount, required this.totalCheckins});
+
+  final int classCount;
+  final int totalCheckins;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: _StatTile(
+              icon: Icons.event_rounded,
+              label: 'Today',
+              value: '$classCount',
+              unit: classCount == 1 ? 'class' : 'classes',
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _StatTile(
+              icon: Icons.how_to_reg_rounded,
+              label: 'Check-ins',
+              value: '$totalCheckins',
+              unit: 'total',
+              color: AppColors.tertiary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  const _StatTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.unit,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final String unit;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      borderColor: color.withValues(alpha: 0.25),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: AppTextStyles.labelSmall(color: AppColors.muted)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(value, style: AppTextStyles.titleLarge(color: color)),
+                  const SizedBox(width: 4),
+                  Text(unit, style: AppTextStyles.labelSmall(color: AppColors.muted)),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsHeaderShimmer extends StatelessWidget {
+  const _StatsHeaderShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      child: AppShimmer(
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(right: 6),
+                height: 64,
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(left: 6),
+                height: 64,
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

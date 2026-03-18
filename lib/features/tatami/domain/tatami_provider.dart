@@ -1,10 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/tatami_repository.dart';
+
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_provider.dart';
-import '../../../shared/models/tatami.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../../../shared/models/tatami.dart';
+import '../data/tatami_repository.dart';
 
 final tatamiRepositoryProvider = Provider<TatamiRepository>((ref) {
   return TatamiRepository(dio: ref.watch(dioProvider));

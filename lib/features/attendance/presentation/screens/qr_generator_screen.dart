@@ -1,12 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
-import '../../../../shared/widgets/glass_card.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/error_view.dart';
+import '../../../../shared/widgets/glass_card.dart';
 import '../../domain/attendance_provider.dart';
 
 class QrGeneratorScreen extends ConsumerStatefulWidget {

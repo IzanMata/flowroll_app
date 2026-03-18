@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/attendance.dart';
 import '../../../../shared/widgets/app_shimmer.dart';
 import '../../../../shared/widgets/error_view.dart';
@@ -45,7 +46,7 @@ class DropInsScreen extends ConsumerWidget {
     final phoneCtrl = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => Padding(

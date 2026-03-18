@@ -3,10 +3,8 @@ import 'package:flowroll_app/features/matches/data/matches_repository.dart';
 import 'package:flowroll_app/features/matches/domain/matches_provider.dart';
 import 'package:flowroll_app/features/matches/presentation/screens/live_match_screen.dart';
 import 'package:flowroll_app/shared/models/match.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 import '../../helpers/fake_repositories.dart';
 import '../../helpers/pump_app.dart';
@@ -20,7 +18,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides(Match match) => [
+  List<Override> overrides(Match match) => [
         matchesRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier()),
         liveMatchProvider.overrideWith(
@@ -35,7 +33,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -49,7 +47,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -63,7 +61,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -76,7 +74,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -89,7 +87,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -102,7 +100,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -110,7 +108,7 @@ void main() {
     });
 
     testWidgets('shows event tiles for each event', (tester) async {
-      final event = MatchEvent(
+      const event = MatchEvent(
         id: 1,
         athlete: 1,
         athleteName: 'athlete_a',
@@ -124,7 +122,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -138,7 +136,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -153,7 +151,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -174,7 +172,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 
@@ -193,7 +191,7 @@ void main() {
 
       await tester.pumpApp(
         LiveMatchScreen(matchId: match.id),
-        overrides: _overrides(match),
+        overrides: overrides(match),
       );
       await tester.pumpAndSettle();
 

@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/academies/data/academies_repository.dart';
 import 'package:flowroll_app/features/academies/domain/academies_provider.dart';
 import 'package:flowroll_app/features/academies/presentation/screens/academy_selector_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         academiesRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => SelectedAcademyNotifier()),
       ];
@@ -37,7 +36,7 @@ void main() {
     testWidgets('shows academy name after data loads', (tester) async {
       mockRepo.stubListAcademies(fakeAcademiesPage([fakeAcademy(name: 'Lions BJJ')]));
 
-      await tester.pumpApp(const AcademySelectorScreen(), overrides: _overrides());
+      await tester.pumpApp(const AcademySelectorScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Lions BJJ'), findsOneWidget);
@@ -46,7 +45,7 @@ void main() {
     testWidgets('shows city when provided', (tester) async {
       mockRepo.stubListAcademies(fakeAcademiesPage([fakeAcademy(city: 'Medellín')]));
 
-      await tester.pumpApp(const AcademySelectorScreen(), overrides: _overrides());
+      await tester.pumpApp(const AcademySelectorScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Medellín'), findsOneWidget);
@@ -55,7 +54,7 @@ void main() {
     testWidgets('shows empty view when no academies', (tester) async {
       mockRepo.stubListAcademies(emptyPage());
 
-      await tester.pumpApp(const AcademySelectorScreen(), overrides: _overrides());
+      await tester.pumpApp(const AcademySelectorScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('No academies found'), findsOneWidget);
@@ -65,7 +64,7 @@ void main() {
       when(() => mockRepo.listAcademies(page: any(named: 'page'), search: any(named: 'search')))
           .thenThrow(Exception('Network error'));
 
-      await tester.pumpApp(const AcademySelectorScreen(), overrides: _overrides());
+      await tester.pumpApp(const AcademySelectorScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -78,7 +77,7 @@ void main() {
         fakeAcademy(id: 3, name: 'Gamma BJJ'),
       ]));
 
-      await tester.pumpApp(const AcademySelectorScreen(), overrides: _overrides());
+      await tester.pumpApp(const AcademySelectorScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Alpha BJJ'), findsOneWidget);

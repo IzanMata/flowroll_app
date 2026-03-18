@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/matches_repository.dart';
+
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_provider.dart';
 import '../../../shared/models/match.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../data/matches_repository.dart';
 
 final matchesRepositoryProvider = Provider<MatchesRepository>((ref) {
   return MatchesRepository(dio: ref.watch(dioProvider));

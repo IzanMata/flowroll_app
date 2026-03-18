@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/athletes/data/athletes_repository.dart';
 import 'package:flowroll_app/features/athletes/domain/athletes_provider.dart';
 import 'package:flowroll_app/features/athletes/presentation/screens/athletes_list_screen.dart';
 import 'package:flowroll_app/shared/models/athlete.dart';
@@ -20,7 +19,7 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides({int? academyId = 1}) => [
+  List<Override> overrides({int? academyId = 1}) => [
         athletesRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FakeAcademyNotifier(academyId)),
       ];
@@ -29,7 +28,7 @@ void main() {
     testWidgets('shows select-academy prompt when no academy', (tester) async {
       await tester.pumpApp(
         const AthletesListScreen(),
-        overrides: _overrides(academyId: null),
+        overrides: overrides(academyId: null),
       );
       await tester.pumpAndSettle();
 
@@ -43,7 +42,7 @@ void main() {
         fakeAthlete(username: 'john_doe', email: 'john@example.com'),
       ]));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('john_doe'), findsOneWidget);
@@ -53,7 +52,7 @@ void main() {
     testWidgets('shows empty view when no athletes', (tester) async {
       mockRepo.stubListAthletes(emptyPage());
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('No athletes'), findsOneWidget);
@@ -67,7 +66,7 @@ void main() {
             ordering: any(named: 'ordering'),
           )).thenThrow(Exception('timeout'));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Exception'), findsOneWidget);
@@ -78,7 +77,7 @@ void main() {
         fakeAthlete(username: 'prof_jones', role: RoleEnum.professor),
       ]));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Professor'), findsOneWidget);
@@ -89,7 +88,7 @@ void main() {
         fakeAthlete(username: 'jane_doe', role: RoleEnum.student),
       ]));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('Student'), findsOneWidget);
@@ -100,7 +99,7 @@ void main() {
     testWidgets('shows "All" filter chip selected by default', (tester) async {
       mockRepo.stubListAthletes(fakeAthletesPage());
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.text('All'), findsOneWidget);
@@ -112,7 +111,7 @@ void main() {
         fakeAthlete(id: 2, username: 'white_belt', belt: BeltEnum.white),
       ]));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       // Both visible before filter
@@ -134,7 +133,7 @@ void main() {
         fakeAthlete(id: 2, username: 'white_belt', belt: BeltEnum.white),
       ]));
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Blue'));
@@ -152,7 +151,7 @@ void main() {
     testWidgets('shows add athlete icon button', (tester) async {
       mockRepo.stubListAthletes(fakeAthletesPage());
 
-      await tester.pumpApp(const AthletesListScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthletesListScreen(), overrides: overrides());
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.person_add_rounded), findsOneWidget);

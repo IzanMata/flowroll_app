@@ -1,5 +1,4 @@
 import 'package:flowroll_app/core/auth/auth_provider.dart';
-import 'package:flowroll_app/features/athletes/data/athletes_repository.dart';
 import 'package:flowroll_app/features/athletes/domain/athletes_provider.dart';
 import 'package:flowroll_app/features/athletes/presentation/screens/athlete_form_screen.dart';
 import 'package:flowroll_app/shared/models/athlete.dart';
@@ -20,20 +19,20 @@ void main() {
     registerFallbacks();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         athletesRepositoryProvider.overrideWithValue(mockRepo),
         selectedAcademyIdProvider.overrideWith((ref) => _FixedAcademyNotifier()),
       ];
 
   group('AthleteFormScreen — create mode', () {
     testWidgets('shows User ID field in create mode', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       expect(find.text('User ID'), findsOneWidget);
     });
 
     testWidgets('shows belt chip options', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       for (final belt in BeltEnum.values) {
         final label = belt.name[0].toUpperCase() + belt.name.substring(1);
@@ -42,14 +41,14 @@ void main() {
     });
 
     testWidgets('shows role segmented button with Student and Professor', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       expect(find.text('Student'), findsOneWidget);
       expect(find.text('Professor'), findsOneWidget);
     });
 
     testWidgets('shows stripe selector 0-4', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       for (int i = 0; i <= 4; i++) {
         expect(find.text('$i'), findsOneWidget);
@@ -57,7 +56,7 @@ void main() {
     });
 
     testWidgets('shows validation error when User ID empty on submit', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.tap(find.text('Save'));
       await tester.pump();
@@ -75,7 +74,7 @@ void main() {
     testWidgets('calls createAthlete with entered user ID', (tester) async {
       mockRepo.stubCreateAthlete(fakeAthlete(id: 99, username: 'new_athlete'));
 
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.enterText(find.byType(TextFormField).first, '42');
       await tester.tap(find.text('Save'));
@@ -93,7 +92,7 @@ void main() {
     testWidgets('shows error message when createAthlete throws', (tester) async {
       mockRepo.stubCreateAthleteFails(Exception('User not found'));
 
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.enterText(find.byType(TextFormField).first, '99');
       await tester.tap(find.text('Save'));
@@ -103,7 +102,7 @@ void main() {
     });
 
     testWidgets('shows invalid user ID error for non-numeric input', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.enterText(find.byType(TextFormField).first, 'abc');
       await tester.tap(find.text('Save'));
@@ -117,7 +116,7 @@ void main() {
     });
 
     testWidgets('selecting a belt chip highlights it', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.tap(find.text('Blue'));
       await tester.pump();
@@ -127,7 +126,7 @@ void main() {
     });
 
     testWidgets('selecting Professor role updates segmented button', (tester) async {
-      await tester.pumpApp(const AthleteFormScreen(), overrides: _overrides());
+      await tester.pumpApp(const AthleteFormScreen(), overrides: overrides());
 
       await tester.tap(find.text('Professor'));
       await tester.pump();
@@ -140,7 +139,7 @@ void main() {
     testWidgets('does not show User ID field in edit mode', (tester) async {
       await tester.pumpApp(
         const AthleteFormScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
 
       expect(find.text('User ID'), findsNothing);
@@ -149,7 +148,7 @@ void main() {
     testWidgets('shows Edit Athlete title in edit mode', (tester) async {
       await tester.pumpApp(
         const AthleteFormScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
 
       expect(find.textContaining('Edit'), findsOneWidget);
@@ -160,7 +159,7 @@ void main() {
 
       await tester.pumpApp(
         const AthleteFormScreen(athleteId: 1),
-        overrides: _overrides(),
+        overrides: overrides(),
       );
 
       await tester.tap(find.text('Save'));

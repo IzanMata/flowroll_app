@@ -18,14 +18,14 @@ void main() {
     mockAuth = MockAuthRepository();
   });
 
-  List<Override> _overrides() => [
+  List<Override> overrides() => [
         authRepositoryProvider.overrideWithValue(mockAuth),
         isAuthenticatedProvider.overrideWith((ref) async => false),
       ];
 
   group('LoginScreen — rendering', () {
     testWidgets('shows username field, password field and sign-in button', (tester) async {
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       expect(find.byKey(const Key('login_username_field')), findsOneWidget);
       expect(find.byKey(const Key('login_password_field')), findsOneWidget);
@@ -33,7 +33,7 @@ void main() {
     });
 
     testWidgets('password field is obscured by default', (tester) async {
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       final field = tester.widget<EditableText>(
         find.descendant(
@@ -45,7 +45,7 @@ void main() {
     });
 
     testWidgets('tapping visibility icon toggles password visibility', (tester) async {
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.tap(find.byIcon(Icons.visibility_off_rounded));
       await tester.pump();
@@ -62,7 +62,7 @@ void main() {
 
   group('LoginScreen — form validation', () {
     testWidgets('shows validation errors when submitting empty fields', (tester) async {
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.tap(find.byKey(const Key('login_submit_button')));
       await tester.pump();
@@ -76,7 +76,7 @@ void main() {
       when(() => mockAuth.login(username: any(named: 'username'), password: any(named: 'password')))
           .thenThrow(const UnauthorizedException());
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), 'admin');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'pass');
@@ -96,7 +96,7 @@ void main() {
         throw const UnauthorizedException();
       });
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), 'admin');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'pass');
@@ -111,7 +111,7 @@ void main() {
       when(() => mockAuth.login(username: 'admin', password: 'admin123'))
           .thenThrow(const UnauthorizedException());
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), '  admin  ');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'admin123');
@@ -125,7 +125,7 @@ void main() {
       when(() => mockAuth.login(username: any(named: 'username'), password: any(named: 'password')))
           .thenThrow(const BadRequestException('Invalid credentials'));
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), 'admin');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'wrong');
@@ -139,7 +139,7 @@ void main() {
       when(() => mockAuth.login(username: any(named: 'username'), password: any(named: 'password')))
           .thenThrow(Exception('Network error'));
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), 'admin');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'admin123');
@@ -157,7 +157,7 @@ void main() {
         throw const UnauthorizedException();
       });
 
-      await tester.pumpApp(const LoginScreen(), overrides: _overrides());
+      await tester.pumpApp(const LoginScreen(), overrides: overrides());
 
       await tester.enterText(find.byKey(const Key('login_username_field')), 'admin');
       await tester.enterText(find.byKey(const Key('login_password_field')), 'pass');

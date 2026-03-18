@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/athletes_repository.dart';
+
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_provider.dart';
 import '../../../shared/models/athlete.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../data/athletes_repository.dart';
 
 final athletesRepositoryProvider = Provider<AthletesRepository>((ref) {
   return AthletesRepository(dio: ref.watch(dioProvider));
@@ -47,7 +48,7 @@ final athleteDetailProvider =
 final currentAcademyAthletesProvider = FutureProvider.autoDispose
     .family<PaginatedResponse<AthleteProfile>, String?>((ref, search) async {
   final academyId = ref.watch(selectedAcademyIdProvider);
-  if (academyId == null) return PaginatedResponse(count: 0, results: []);
+  if (academyId == null) return const PaginatedResponse(count: 0, results: []);
   return ref.watch(athletesRepositoryProvider).listAthletes(
         academyId: academyId,
         search: search,

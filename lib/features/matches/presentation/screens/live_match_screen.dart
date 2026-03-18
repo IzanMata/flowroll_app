@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/match.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/matches_provider.dart';
@@ -60,7 +61,7 @@ class _LiveMatchScreenState extends ConsumerState<LiveMatchScreen> {
   }
 
   void _showFinishDialog(BuildContext context, Match match) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => Padding(
         padding: const EdgeInsets.all(24),
@@ -159,7 +160,7 @@ class _LiveMatchBody extends ConsumerWidget {
     EventTypeEnum? eventType = EventTypeEnum.points;
     final descCtrl = TextEditingController();
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => StatefulBuilder(
@@ -270,63 +271,67 @@ class _ScorePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.surface, AppColors.surfaceVariant],
         ),
-        border: const Border(
+        border: Border(
           bottom: BorderSide(color: AppColors.surfaceBorder),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        children: [
-          // Athlete A
-          Expanded(
-            child: _AthleteScore(
-              name: match.athleteADetail.username,
-              score: match.scoreA,
-              isWinner: match.isFinished && match.winner == match.athleteA,
-              color: AppColors.primary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Row(
+          children: [
+            // Athlete A
+            Expanded(
+              child: _AthleteScore(
+                name: match.athleteADetail.username,
+                score: match.scoreA,
+                isWinner: match.isFinished && match.winner == match.athleteA,
+                color: AppColors.primary,
+              ),
             ),
-          ),
-          // VS divider
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('VS', style: AppTextStyles.labelMedium(color: AppColors.muted)),
-                const SizedBox(height: 8),
-                if (match.isFinished)
-                  Icon(Icons.emoji_events_rounded,
-                      color: AppColors.primary, size: 28)
-                else
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: AppColors.secondary,
-                      shape: BoxShape.circle,
+            // VS divider
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('VS', style: AppTextStyles.labelMedium(color: AppColors.muted)),
+                  const SizedBox(height: 8),
+                  if (match.isFinished)
+                    const Icon(Icons.emoji_events_rounded,
+                        color: AppColors.primary, size: 28)
+                  else
+                    const SizedBox(
+                      width: 10,
+                      height: 10,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Athlete B
-          Expanded(
-            child: _AthleteScore(
-              name: match.athleteBDetail.username,
-              score: match.scoreB,
-              isWinner: match.isFinished && match.winner == match.athleteB,
-              color: AppColors.secondary,
-              rightAlign: true,
+            // Athlete B
+            Expanded(
+              child: _AthleteScore(
+                name: match.athleteBDetail.username,
+                score: match.scoreB,
+                isWinner: match.isFinished && match.winner == match.athleteB,
+                color: AppColors.secondary,
+                rightAlign: true,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

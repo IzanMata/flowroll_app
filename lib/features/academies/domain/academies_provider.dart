@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/academies_repository.dart';
+
 import '../../../core/api/providers.dart';
 import '../../../shared/models/academy.dart';
 import '../../../shared/models/paginated_response.dart';
+import '../data/academies_repository.dart';
 
 final academiesRepositoryProvider = Provider<AcademiesRepository>((ref) {
   return AcademiesRepository(dio: ref.watch(dioProvider));
