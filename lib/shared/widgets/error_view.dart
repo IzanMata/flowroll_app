@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_strings.dart';
@@ -25,24 +26,30 @@ class ErrorView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 64,
-              height: 64,
+              width: 72,
+              height: 72,
               decoration: BoxDecoration(
                 color: AppColors.error.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(36),
               ),
               child: Icon(
                 icon ?? Icons.error_outline_rounded,
                 color: AppColors.error,
-                size: 32,
+                size: 36,
               ),
-            ),
+            )
+                .animate()
+                .fadeIn(duration: 400.ms, curve: Curves.easeOut)
+                .scale(begin: const Offset(0.7, 0.7), curve: Curves.elasticOut, duration: 500.ms),
             const SizedBox(height: 16),
             Text(
               message ?? AppStrings.error,
               style: AppTextStyles.bodyMedium(color: AppColors.muted),
               textAlign: TextAlign.center,
-            ),
+            )
+                .animate()
+                .fadeIn(delay: 100.ms, duration: 350.ms)
+                .slideY(begin: 0.15, curve: Curves.easeOut, duration: 350.ms),
             if (onRetry != null) ...[
               const SizedBox(height: 24),
               OutlinedButton.icon(
@@ -52,7 +59,10 @@ class ErrorView extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(160, 44),
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(delay: 200.ms, duration: 300.ms)
+                  .slideY(begin: 0.2, curve: Curves.easeOut, duration: 300.ms),
             ],
           ],
         ),
@@ -77,6 +87,8 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -84,31 +96,40 @@ class EmptyView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 88,
+              height: 88,
               decoration: BoxDecoration(
-                color: AppColors.surfaceVariant,
-                borderRadius: BorderRadius.circular(40),
+                color: cs.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(44),
               ),
               child: Icon(
                 icon ?? Icons.inbox_rounded,
                 color: AppColors.muted,
-                size: 40,
+                size: 44,
               ),
-            ),
-            const SizedBox(height: 16),
+            )
+                .animate()
+                .fadeIn(duration: 400.ms, curve: Curves.easeOut)
+                .scale(begin: const Offset(0.75, 0.75), curve: Curves.elasticOut, duration: 550.ms),
+            const SizedBox(height: 20),
             Text(
               message ?? AppStrings.empty,
               style: AppTextStyles.bodyMedium(color: AppColors.muted),
               textAlign: TextAlign.center,
-            ),
+            )
+                .animate()
+                .fadeIn(delay: 100.ms, duration: 350.ms)
+                .slideY(begin: 0.15, curve: Curves.easeOut, duration: 350.ms),
             if (action != null && actionLabel != null) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               ElevatedButton(
                 onPressed: action,
                 style: ElevatedButton.styleFrom(minimumSize: const Size(160, 44)),
                 child: Text(actionLabel!),
-              ),
+              )
+                  .animate()
+                  .fadeIn(delay: 200.ms, duration: 300.ms)
+                  .slideY(begin: 0.2, curve: Curves.easeOut, duration: 300.ms),
             ],
           ],
         ),

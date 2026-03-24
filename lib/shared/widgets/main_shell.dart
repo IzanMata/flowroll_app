@@ -42,16 +42,31 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.surface : AppColors.lightSurface;
+    final borderColor = isDark ? AppColors.surfaceBorder : AppColors.lightSurfaceBorder;
+
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.surfaceBorder, width: 1)),
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        border: Border(top: BorderSide(color: borderColor, width: 1)),
+        // Subtle upward shadow in light mode for depth
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 16,
+                  offset: const Offset(0, -4),
+                ),
+              ],
       ),
       child: SafeArea(
         child: NavigationBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           selectedIndex: _currentIndex,
+          animationDuration: const Duration(milliseconds: 300),
           onDestinationSelected: (index) {
             HapticFeedback.lightImpact();
             context.go(_tabs[index].path);

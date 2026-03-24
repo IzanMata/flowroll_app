@@ -24,6 +24,10 @@ abstract final class AppColors {
   static const Color muted = Color(0xFF6B6B80);
   static const Color onPrimary = Color(0xFF0A0A0F);
 
+  // Class type colors (prevent hardcoding in feature files)
+  static const Color kidsOrange = Color(0xFFFF9800);
+  static const Color competitionPink = Color(0xFFE91E63);
+
   // Belt colors
   static const Color beltWhite = Color(0xFFFFFFFF);
   static const Color beltBlue = Color(0xFF1565C0);
@@ -35,6 +39,19 @@ abstract final class AppColors {
   static const Color timerGreen = Color(0xFF00C853);
   static const Color timerYellow = Color(0xFFFFD600);
   static const Color timerRed = Color(0xFFFF3B5C);
+
+  // Light-mode brand (darker lime so it reads on white)
+  static const Color primaryLight = Color(0xFF3D6B00);
+  static const Color onPrimaryLight = Color(0xFFFFFFFF);
+
+  // Light-mode surfaces
+  static const Color lightBackground = Color(0xFFF5F7FB);
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightSurfaceVariant = Color(0xFFEEF1F8);
+  static const Color lightSurfaceBorder = Color(0xFFDDE1EE);
+  static const Color lightOnBackground = Color(0xFF0D0D14);
+  static const Color lightOnSurface = Color(0xFF1C1C2E);
+  static const Color lightMuted = Color(0xFF8A8B9F);
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(

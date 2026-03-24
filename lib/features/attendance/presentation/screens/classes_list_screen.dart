@@ -253,8 +253,8 @@ class _ClassCard extends StatelessWidget {
         ClassTypeEnum.gi => AppColors.primary,
         ClassTypeEnum.nogi => AppColors.secondary,
         ClassTypeEnum.openMat => AppColors.tertiary,
-        ClassTypeEnum.kids => const Color(0xFFFF9800),
-        ClassTypeEnum.competition => const Color(0xFFE91E63),
+        ClassTypeEnum.kids => AppColors.kidsOrange,
+        ClassTypeEnum.competition => AppColors.competitionPink,
         null => AppColors.muted,
       };
 
