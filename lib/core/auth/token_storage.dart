@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenStorage {
   static const _accessKey = 'fr_access_token';
@@ -10,6 +9,10 @@ class TokenStorage {
   static const _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
+
+  // Web: in-memory only — avoids storing JWT in localStorage (XSS risk).
+  // Tokens are lost on page refresh; the app redirects to /login as expected.
+  final Map<String, String> _webMemory = {};
 
   Future<String?> getAccessToken() => _read(_accessKey);
   Future<String?> getRefreshToken() => _read(_refreshKey);
@@ -38,28 +41,23 @@ class TokenStorage {
   // ── Platform-aware helpers ──────────────────────────────────────────────
 
   Future<String?> _read(String key) async {
-    if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString(key);
-    }
+    if (kIsWeb) return _webMemory[key];
     return _secureStorage.read(key: key);
   }
 
   Future<void> _write(String key, String value) async {
     if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(key, value);
-    } else {
-      await _secureStorage.write(key: key, value: value);
+      _webMemory[key] = value;
+      return;
     }
+    await _secureStorage.write(key: key, value: value);
   }
 
   Future<void> _delete(String key) async {
     if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(key);
-    } else {
-      await _secureStorage.delete(key: key);
+      _webMemory.remove(key);
+      return;
     }
+    await _secureStorage.delete(key: key);
   }
 }

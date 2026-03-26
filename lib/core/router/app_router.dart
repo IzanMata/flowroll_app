@@ -78,15 +78,29 @@ Page<T> _fadePage<T>(Widget child, GoRouterState state) =>
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(isAuthenticatedProvider);
+  final academyId = ref.watch(selectedAcademyIdProvider);
+
+  // Routes inside the ShellRoute that require an academy to be selected
+  const shellPrefixes = ['/home', '/athletes', '/matches', '/tatami', '/techniques', '/drop-ins'];
 
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
       final isAuth = authState.valueOrNull ?? false;
-      final isOnAuth = state.uri.path.startsWith('/login') || state.uri.path == '/splash';
+      final path = state.uri.path;
+      final isOnAuth = path.startsWith('/login') || path == '/splash';
 
       if (!isAuth && !isOnAuth) return '/login';
-      if (isAuth && state.uri.path == '/login') return '/home';
+      if (isAuth && path == '/login') return '/home';
+
+      // Authenticated but no academy selected → force selection
+      if (isAuth &&
+          academyId == null &&
+          path != '/select-academy' &&
+          shellPrefixes.any((p) => path.startsWith(p))) {
+        return '/select-academy';
+      }
+
       return null;
     },
     routes: [
@@ -111,17 +125,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: 'class/:id',
-                pageBuilder: (_, s) => _slidePage(
-                  ClassDetailScreen(classId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const ClassesListScreen(), s);
+                  return _slidePage(ClassDetailScreen(classId: id), s);
+                },
               ),
               GoRoute(
                 path: 'class/:id/qr',
-                pageBuilder: (_, s) => _slidePage(
-                  QrGeneratorScreen(classId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const ClassesListScreen(), s);
+                  return _slidePage(QrGeneratorScreen(classId: id), s);
+                },
               ),
             ],
           ),
@@ -131,10 +147,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: ':id',
-                pageBuilder: (_, s) => _slidePage(
-                  AthleteDetailScreen(athleteId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const AthletesListScreen(), s);
+                  return _slidePage(AthleteDetailScreen(athleteId: id), s);
+                },
               ),
               GoRoute(
                 path: 'new',
@@ -142,10 +159,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: ':id/edit',
-                pageBuilder: (_, s) => _slidePage(
-                  AthleteFormScreen(athleteId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const AthletesListScreen(), s);
+                  return _slidePage(AthleteFormScreen(athleteId: id), s);
+                },
               ),
             ],
           ),
@@ -155,17 +173,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: ':id',
-                pageBuilder: (_, s) => _slidePage(
-                  MatchDetailScreen(matchId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const MatchesListScreen(), s);
+                  return _slidePage(MatchDetailScreen(matchId: id), s);
+                },
               ),
               GoRoute(
                 path: ':id/live',
-                pageBuilder: (_, s) => _bottomSlidePage(
-                  LiveMatchScreen(matchId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const MatchesListScreen(), s);
+                  return _bottomSlidePage(LiveMatchScreen(matchId: id), s);
+                },
               ),
             ],
           ),
@@ -179,10 +199,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: 'timers/:id/session',
-                pageBuilder: (_, s) => _bottomSlidePage(
-                  TimerSessionScreen(presetId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const TimerPresetsScreen(), s);
+                  return _bottomSlidePage(TimerSessionScreen(presetId: id), s);
+                },
               ),
               GoRoute(
                 path: 'weights',
@@ -196,10 +217,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: ':id',
-                pageBuilder: (_, s) => _slidePage(
-                  TechniqueDetailScreen(techniqueId: int.parse(s.pathParameters['id']!)),
-                  s,
-                ),
+                pageBuilder: (_, s) {
+                  final id = int.tryParse(s.pathParameters['id'] ?? '');
+                  if (id == null) return _fadePage(const TechniquesCurriculumScreen(), s);
+                  return _slidePage(TechniqueDetailScreen(techniqueId: id), s);
+                },
               ),
             ],
           ),

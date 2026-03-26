@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../../../core/api/api_exception.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -34,6 +35,12 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
     final code = capture.barcodes.firstOrNull?.rawValue;
     if (code == null) return;
 
+    // Basic sanity check before hitting the network: valid JWT chars, max 500 bytes
+    if (code.length > 500 || !RegExp(r'^[\w\-\.]+$').hasMatch(code)) {
+      setState(() => _errorMessage = AppStrings.invalidQrCode);
+      return;
+    }
+
     setState(() {
       _processing = true;
       _errorMessage = null;
@@ -45,10 +52,16 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
       setState(() => _success = true);
       await Future<void>.delayed(const Duration(seconds: 2));
       if (mounted) context.pop();
-    } catch (e) {
+    } on ApiException catch (e) {
       await HapticFeedback.vibrate();
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = e.message;
+        _processing = false;
+      });
+    } catch (_) {
+      await HapticFeedback.vibrate();
+      setState(() {
+        _errorMessage = AppStrings.unexpectedError;
         _processing = false;
       });
     }

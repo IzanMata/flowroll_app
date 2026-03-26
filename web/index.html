@@ -18,6 +18,10 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <!-- Content Security Policy: restrict resource origins to reduce XSS impact.
+       Update connect-src with your production API domain before deploying. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 https://fonts.googleapis.com;">
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->

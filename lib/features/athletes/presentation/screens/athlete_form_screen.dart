@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/api/api_exception.dart';
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -69,8 +70,10 @@ class _AthleteFormScreenState extends ConsumerState<AthleteFormScreen> {
         );
       }
       if (mounted) context.pop();
-    } catch (e) {
-      setState(() => _error = e.toString());
+    } on ApiException catch (e) {
+      setState(() => _error = e.message);
+    } catch (_) {
+      setState(() => _error = AppStrings.unexpectedError);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

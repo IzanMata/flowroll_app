@@ -86,6 +86,8 @@ abstract final class AppStrings {
   static const String retry = 'Retry';
   static const String loading = 'Loading...';
   static const String error = 'Something went wrong';
+  static const String unexpectedError = 'An unexpected error occurred. Please try again.';
+  static const String invalidQrCode = 'Invalid QR code. Please try again.';
   static const String empty = 'Nothing here yet';
   static const String offline = 'No internet connection';
   static const String confirm = 'Confirm';

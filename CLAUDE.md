@@ -1,7 +1,34 @@
-# FlowRoll Flutter — Claude Context
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project in One Paragraph
 FlowRoll is a BJJ (Brazilian Jiu-Jitsu) academy management SaaS. Academy owners manage athletes, schedule classes, track attendance (QR check-in + drop-ins), run live matches with real-time scoring, manage tatami matchups with countdown timers, and browse a techniques curriculum. The backend is a Django REST API with JWT auth and multi-tenant isolation via `?academy=<id>` query param.
+
+## Environment Setup
+```bash
+cp .env.example .env   # set API_BASE_URL=http://localhost:8000
+flutter pub get        # or: make setup
+```
+The `.env` file is injected at compile-time via `--dart-define-from-file=.env` (see Makefile targets).
+
+## Commands
+```bash
+make dev              # Run on Chrome (hot reload, uses .env)
+make dev-android      # Run on first connected Android device
+make dev-web          # Web server on port 8090
+make analyze          # flutter analyze
+make lint             # format-check + analyze
+make format           # dart format lib/ test/
+make test             # All tests
+make test-coverage    # Tests + coverage report → coverage/lcov.info
+make clean            # Remove build artifacts + coverage/
+```
+
+Run a single test file:
+```bash
+flutter test test/features/athletes/athletes_list_screen_test.dart
+```
 
 ## Tech Stack (actual — no code generation)
 - Flutter 3.x + Dart, SDK ≥3.3.0
@@ -22,6 +49,15 @@ lib/features/{feature}/
     widgets/ → feature-scoped reusables
 ```
 Shared: `lib/shared/models/` (data classes) · `lib/shared/widgets/` (ErrorView, EmptyView, ShimmerList, GlassCard, Tappable, BeltBadge, AppSearchBar)
+
+## Core Infrastructure Files
+- Router & guards: `lib/core/router/`
+- API base URL, endpoint constants: `lib/core/api/api_constants.dart`
+- Dio setup + JWT interceptor: `lib/core/api/dio_client.dart`
+- Auth state (login, token refresh, logout): `lib/core/auth/auth_provider.dart`
+- Theme tokens: `lib/core/theme/` — `AppColors`, `AppTextStyles`, `AppStrings`
+- Bottom nav shell: `lib/shared/widgets/main_shell.dart`
+- Test helpers: `test/helpers/pump_app.dart`, `fake_repositories.dart`, `test_data.dart`
 
 ## Coding Rules (non-negotiable)
 - Colors: `AppColors.*` only — never raw `Color(0x…)` in screens
