@@ -32,10 +32,13 @@ class ClassesFilter {
       other.academyId == academyId &&
       other.page == page &&
       other.search == search &&
-      other.classType == classType;
+      other.classType == classType &&
+      other.scheduledAfter == scheduledAfter &&
+      other.scheduledBefore == scheduledBefore;
 
   @override
-  int get hashCode => Object.hash(academyId, page, search, classType);
+  int get hashCode =>
+      Object.hash(academyId, page, search, classType, scheduledAfter, scheduledBefore);
 }
 
 final trainingClassesProvider = FutureProvider.autoDispose

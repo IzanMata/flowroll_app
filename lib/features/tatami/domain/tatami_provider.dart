@@ -228,7 +228,7 @@ final class _Error extends TimerSessionState {
 }
 
 final timerSessionNotifierProvider =
-    StateNotifierProvider<TimerSessionNotifier, TimerSessionState>((ref) {
+    StateNotifierProvider.autoDispose<TimerSessionNotifier, TimerSessionState>((ref) {
   final academyId = ref.watch(selectedAcademyIdProvider);
   if (academyId == null) return TimerSessionNotifier(ref.watch(tatamiRepositoryProvider), 0);
   return TimerSessionNotifier(ref.watch(tatamiRepositoryProvider), academyId);
