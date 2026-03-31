@@ -10,7 +10,6 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/attendance.dart';
 import '../../../../shared/widgets/app_shimmer.dart';
 import '../../../../shared/widgets/error_view.dart';
-import '../../../../shared/widgets/glass_card.dart';
 import '../../../../shared/widgets/tappable.dart';
 import '../../domain/attendance_provider.dart';
 
@@ -21,30 +20,41 @@ class ClassesListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final academyId = ref.watch(selectedAcademyIdProvider);
     final classesAsync = ref.watch(todaysClassesProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.background : AppColors.lightBackground,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppStrings.appName, style: AppTextStyles.displaySmall(color: AppColors.primary)),
             Text(
-              DateFormat('EEEE, MMM d').format(DateTime.now()),
+              AppStrings.appName,
+              style: AppTextStyles.titleLarge(
+                color: isDark ? AppColors.onBackground : AppColors.lightOnBackground,
+              ),
+            ),
+            Text(
+              DateFormat('EEEE, MMMM d').format(DateTime.now()),
               style: AppTextStyles.labelMedium(color: AppColors.muted),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.school_rounded, color: AppColors.muted),
+            icon: Icon(Icons.school_outlined,
+                color: isDark ? AppColors.muted : AppColors.lightMuted),
             onPressed: () => context.push('/select-academy'),
             tooltip: AppStrings.selectAcademy,
           ),
-          IconButton(
-            icon: const Icon(Icons.qr_code_scanner_rounded, color: AppColors.primary),
-            onPressed: () => context.push('/qr-scan'),
-            tooltip: AppStrings.scanQr,
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: Icon(Icons.qr_code_scanner_rounded,
+                  color: isDark ? AppColors.primary : AppColors.primaryLight),
+              onPressed: () => context.push('/qr-scan'),
+              tooltip: AppStrings.scanQr,
+            ),
           ),
         ],
       ),
@@ -56,8 +66,8 @@ class ClassesListScreen extends ConsumerWidget {
               actionLabel: AppStrings.selectAcademy,
             )
           : RefreshIndicator(
-              color: AppColors.primary,
-              backgroundColor: AppColors.surface,
+              color: isDark ? AppColors.primary : AppColors.primaryLight,
+              backgroundColor: isDark ? AppColors.surface : AppColors.lightSurface,
               onRefresh: () async => ref.invalidate(todaysClassesProvider),
               child: classesAsync.when(
                 loading: () => const Column(
@@ -92,10 +102,10 @@ class ClassesListScreen extends ConsumerWidget {
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                           sliver: SliverList.separated(
                             itemCount: classes.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            separatorBuilder: (_, __) => const SizedBox(height: 10),
                             itemBuilder: (_, i) => _ClassCard(trainingClass: classes[i]),
                           ),
                         ),
@@ -115,7 +125,7 @@ class ClassesListScreen extends ConsumerWidget {
   }
 }
 
-// ─── Dashboard stats header ──────────────────────────────────────────────────
+// ─── Stats header ────────────────────────────────────────────────────────────
 
 class _StatsHeader extends StatelessWidget {
   const _StatsHeader({required this.classCount, required this.totalCheckins});
@@ -125,27 +135,28 @@ class _StatsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: Row(
         children: [
           Expanded(
-            child: _StatTile(
-              icon: Icons.event_rounded,
-              label: 'Today',
+            child: _StatCard(
+              label: "Today's classes",
               value: '$classCount',
-              unit: classCount == 1 ? 'class' : 'classes',
-              color: AppColors.primary,
+              icon: Icons.calendar_today_rounded,
+              color: isDark ? AppColors.primary : AppColors.primaryLight,
+              isDark: isDark,
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: _StatTile(
-              icon: Icons.how_to_reg_rounded,
-              label: 'Check-ins',
+            child: _StatCard(
+              label: 'Total check-ins',
               value: '$totalCheckins',
-              unit: 'total',
-              color: AppColors.tertiary,
+              icon: Icons.how_to_reg_rounded,
+              color: AppColors.secondary,
+              isDark: isDark,
             ),
           ),
         ],
@@ -154,53 +165,65 @@ class _StatsHeader extends StatelessWidget {
   }
 }
 
-class _StatTile extends StatelessWidget {
-  const _StatTile({
-    required this.icon,
+class _StatCard extends StatelessWidget {
+  const _StatCard({
     required this.label,
     required this.value,
-    required this.unit,
+    required this.icon,
     required this.color,
+    required this.isDark,
   });
 
-  final IconData icon;
   final String label;
   final String value;
-  final String unit;
+  final IconData icon;
   final Color color;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      borderColor: color.withValues(alpha: 0.25),
-      child: Row(
+    final bg = isDark ? AppColors.surface : AppColors.lightSurface;
+    final border = isDark ? AppColors.surfaceBorder : AppColors.lightSurfaceBorder;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(label, style: AppTextStyles.labelSmall(color: AppColors.muted)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(value, style: AppTextStyles.titleLarge(color: color)),
-                  const SizedBox(width: 4),
-                  Text(unit, style: AppTextStyles.labelSmall(color: AppColors.muted)),
-                ],
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 16),
+              ),
+              const Spacer(),
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: AppTextStyles.statNumber(color: color),
+          ),
+          const SizedBox(height: 2),
+          Text(label, style: AppTextStyles.labelMedium()),
         ],
       ),
     );
@@ -212,27 +235,29 @@ class _StatsHeaderShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isDark ? AppColors.surface : AppColors.lightSurface;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: AppShimmer(
         child: Row(
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(right: 6),
-                height: 64,
+                height: 96,
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: bg,
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
             ),
+            const SizedBox(width: 12),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(left: 6),
-                height: 64,
+                height: 96,
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: bg,
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
@@ -244,6 +269,8 @@ class _StatsHeaderShimmer extends StatelessWidget {
   }
 }
 
+// ─── Class card ───────────────────────────────────────────────────────────────
+
 class _ClassCard extends StatelessWidget {
   const _ClassCard({required this.trainingClass});
 
@@ -251,8 +278,8 @@ class _ClassCard extends StatelessWidget {
 
   Color get _typeColor => switch (trainingClass.classType) {
         ClassTypeEnum.gi => AppColors.primary,
-        ClassTypeEnum.nogi => AppColors.secondary,
-        ClassTypeEnum.openMat => AppColors.tertiary,
+        ClassTypeEnum.nogi => AppColors.tertiary,
+        ClassTypeEnum.openMat => AppColors.secondary,
         ClassTypeEnum.kids => AppColors.kidsOrange,
         ClassTypeEnum.competition => AppColors.competitionPink,
         null => AppColors.muted,
@@ -260,75 +287,109 @@ class _ClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isDark ? AppColors.surface : AppColors.lightSurface;
+    final border = isDark ? AppColors.surfaceBorder : AppColors.lightSurfaceBorder;
+    final typeColor = _typeColor;
     final timeStr = DateFormat('h:mm a').format(trainingClass.scheduledAt);
     final duration = trainingClass.durationMinutes;
 
     return Tappable(
       onTap: () => context.push('/home/class/${trainingClass.id}'),
-      child: GlassCard(
+      child: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: border),
+        ),
         child: Row(
           children: [
-            // Time column
-            SizedBox(
-              width: 56,
+            // Left accent bar + time
+            Container(
+              width: 72,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: typeColor.withValues(alpha: 0.08),
+                borderRadius: const BorderRadius.horizontal(left: Radius.circular(15)),
+                border: Border(
+                  right: BorderSide(color: border),
+                ),
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(timeStr.split(' ')[0], style: AppTextStyles.titleMedium(color: AppColors.primary)),
-                  Text(timeStr.split(' ')[1], style: AppTextStyles.labelSmall(color: AppColors.muted)),
+                  Text(
+                    timeStr.split(' ')[0],
+                    style: AppTextStyles.titleMedium(
+                      color: isDark ? AppColors.onBackground : AppColors.lightOnBackground,
+                    ),
+                  ),
+                  Text(
+                    timeStr.split(' ')[1].toLowerCase(),
+                    style: AppTextStyles.labelSmall(),
+                  ),
                 ],
               ),
             ),
-            Container(width: 1, height: 48, color: AppColors.surfaceBorder),
-            const SizedBox(width: 16),
+            // Content
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        margin: const EdgeInsets.only(right: 6),
-                        decoration: BoxDecoration(
-                          color: _typeColor,
-                          shape: BoxShape.circle,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: typeColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            trainingClass.classType?.label ?? 'Class',
+                            style: AppTextStyles.labelSmall(color: typeColor),
+                          ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      trainingClass.title,
+                      style: AppTextStyles.titleSmall(
+                        color: isDark ? AppColors.onBackground : AppColors.lightOnBackground,
                       ),
+                    ),
+                    if (trainingClass.professorUsername.isNotEmpty ||
+                        duration != null) ...[
+                      const SizedBox(height: 2),
                       Text(
-                        trainingClass.classType?.label ?? 'Class',
-                        style: AppTextStyles.labelSmall(color: _typeColor),
+                        [
+                          if (trainingClass.professorUsername.isNotEmpty)
+                            trainingClass.professorUsername,
+                          if (duration != null) '${duration}min',
+                        ].join('  ·  '),
+                        style: AppTextStyles.bodySmall(),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(trainingClass.title, style: AppTextStyles.titleSmall()),
-                  Text(
-                    trainingClass.professorUsername.isNotEmpty
-                        ? '${trainingClass.professorUsername}${duration != null ? '  ·  ${duration}min' : ''}'
-                        : duration != null ? '${duration}min' : '',
-                    style: AppTextStyles.bodySmall(),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
+            // Check-in count
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Column(
+                children: [
+                  Text(
                     '${trainingClass.attendanceCount}',
-                    style: AppTextStyles.titleSmall(color: AppColors.primary),
+                    style: AppTextStyles.titleMedium(
+                      color: isDark ? AppColors.primary : AppColors.primaryLight,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text('checked in', style: AppTextStyles.labelSmall()),
-              ],
+                  Text('in', style: AppTextStyles.labelSmall()),
+                ],
+              ),
             ),
           ],
         ),

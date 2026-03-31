@@ -4,15 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 abstract final class AppTheme {
-  // ─── Dark ──────────────────────────────────────────────────────────────────
-
   static ThemeData get dark => _build(Brightness.dark);
-
-  // ─── Light ─────────────────────────────────────────────────────────────────
-
   static ThemeData get light => _build(Brightness.light);
-
-  // ─── Builder ───────────────────────────────────────────────────────────────
 
   static ThemeData _build(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
@@ -23,11 +16,11 @@ abstract final class AppTheme {
             primary: AppColors.primary,
             onPrimary: AppColors.onPrimary,
             secondary: AppColors.secondary,
-            onSecondary: AppColors.onBackground,
+            onSecondary: AppColors.onPrimary,
             tertiary: AppColors.tertiary,
-            onTertiary: AppColors.onBackground,
+            onTertiary: AppColors.onPrimary,
             error: AppColors.error,
-            onError: AppColors.onBackground,
+            onError: AppColors.onPrimary,
             surface: AppColors.surface,
             onSurface: AppColors.onSurface,
             surfaceContainerHighest: AppColors.surfaceVariant,
@@ -39,7 +32,7 @@ abstract final class AppTheme {
             primary: AppColors.primaryLight,
             onPrimary: AppColors.onPrimaryLight,
             secondary: AppColors.secondary,
-            onSecondary: AppColors.lightSurface,
+            onSecondary: AppColors.onPrimaryLight,
             tertiary: AppColors.tertiary,
             onTertiary: AppColors.lightSurface,
             error: AppColors.error,
@@ -61,9 +54,8 @@ abstract final class AppTheme {
     final primary = isDark ? AppColors.primary : AppColors.primaryLight;
     final onPrimary = isDark ? AppColors.onPrimary : AppColors.onPrimaryLight;
 
-    final baseTextTheme = isDark
-        ? ThemeData.dark().textTheme
-        : ThemeData.light().textTheme;
+    final baseTextTheme =
+        isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
 
     return ThemeData(
       useMaterial3: true,
@@ -74,10 +66,10 @@ abstract final class AppTheme {
         displayLarge: TextStyle(color: onBg),
         displayMedium: TextStyle(color: onBg),
         displaySmall: TextStyle(color: onBg),
-        headlineLarge: TextStyle(color: onBg, fontWeight: FontWeight.w700),
+        headlineLarge: TextStyle(color: onBg, fontWeight: FontWeight.w800),
         headlineMedium: TextStyle(color: onBg, fontWeight: FontWeight.w700),
-        headlineSmall: TextStyle(color: onBg, fontWeight: FontWeight.w600),
-        titleLarge: TextStyle(color: onSurface, fontWeight: FontWeight.w700),
+        headlineSmall: TextStyle(color: onBg, fontWeight: FontWeight.w700),
+        titleLarge: TextStyle(color: onBg, fontWeight: FontWeight.w700),
         titleMedium: TextStyle(color: onSurface, fontWeight: FontWeight.w600),
         titleSmall: TextStyle(color: onSurface, fontWeight: FontWeight.w600),
         bodyLarge: TextStyle(color: onSurface),
@@ -93,6 +85,13 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: onBg,
+          letterSpacing: -0.4,
+        ),
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -100,8 +99,8 @@ abstract final class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: surfaceColor,
-        elevation: isDark ? 0 : 2,
-        shadowColor: isDark ? Colors.transparent : Colors.black12,
+        elevation: 0,
+        shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: borderColor, width: 1),
@@ -116,9 +115,9 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 0,
           textStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             fontSize: 15,
-            letterSpacing: 0.5,
+            letterSpacing: 0.2,
           ),
         ),
       ),
@@ -162,20 +161,26 @@ abstract final class AppTheme {
         prefixIconColor: muted,
         suffixIconColor: muted,
       ),
+      // Navigation bar — minimal, matches Smoothcomp style
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: surfaceColor,
-        indicatorColor: primary.withValues(alpha: isDark ? 0.15 : 0.12),
+        indicatorColor: primary.withValues(alpha: 0.15),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return IconThemeData(color: primary);
+            return IconThemeData(color: primary, size: 22);
           }
-          return IconThemeData(color: muted);
+          return IconThemeData(color: muted, size: 22);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 12);
+            return TextStyle(
+              color: primary,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              letterSpacing: 0.2,
+            );
           }
-          return TextStyle(color: muted, fontSize: 12);
+          return TextStyle(color: muted, fontSize: 11);
         }),
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
@@ -187,18 +192,23 @@ abstract final class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: surfaceVariantColor,
-        selectedColor: primary.withValues(alpha: 0.2),
-        labelStyle: TextStyle(color: onSurface, fontSize: 13),
+        selectedColor: primary.withValues(alpha: 0.18),
+        labelStyle: TextStyle(
+          color: onSurface,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
         side: BorderSide(color: borderColor),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        shape: RoundedRectangleBorder(
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surfaceColor,
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         showDragHandle: true,
-        dragHandleColor: AppColors.muted,
+        dragHandleColor: borderColor,
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: surfaceVariantColor,
@@ -223,7 +233,7 @@ abstract final class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: primary,
         foregroundColor: onPrimary,
-        elevation: 4,
+        elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),

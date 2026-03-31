@@ -105,7 +105,6 @@ class TatamiRepository {
       final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.timerSessionsPath}$sessionId/pause/',
         queryParameters: {ApiConstants.academyParam: academyId},
-        data: {'preset': 0},
       );
       return TimerSession.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -118,7 +117,6 @@ class TatamiRepository {
       final response = await dio.post<Map<String, dynamic>>(
         '${ApiConstants.timerSessionsPath}$sessionId/finish/',
         queryParameters: {ApiConstants.academyParam: academyId},
-        data: {'preset': 0},
       );
       return TimerSession.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
