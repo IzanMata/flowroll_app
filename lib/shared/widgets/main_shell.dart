@@ -26,11 +26,11 @@ class _BottomNav extends StatelessWidget {
   final String currentLocation;
 
   static const _tabs = [
-    (icon: Icons.today_rounded, label: AppStrings.attendance, path: '/home'),
-    (icon: Icons.people_rounded, label: AppStrings.athletes, path: '/athletes'),
+    (icon: Icons.calendar_today_rounded, label: AppStrings.attendance, path: '/home'),
+    (icon: Icons.people_alt_rounded, label: AppStrings.athletes, path: '/athletes'),
     (icon: Icons.sports_mma_rounded, label: AppStrings.matches, path: '/matches'),
-    (icon: Icons.grid_view_rounded, label: AppStrings.tatami, path: '/tatami'),
-    (icon: Icons.school_rounded, label: AppStrings.techniques, path: '/techniques'),
+    (icon: Icons.grid_4x4_rounded, label: AppStrings.tatami, path: '/tatami'),
+    (icon: Icons.menu_book_rounded, label: AppStrings.techniques, path: '/techniques'),
   ];
 
   int get _currentIndex {
@@ -45,40 +45,99 @@ class _BottomNav extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? AppColors.surface : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.surfaceBorder : AppColors.lightSurfaceBorder;
+    final currentIndex = _currentIndex;
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: surfaceColor,
         border: Border(top: BorderSide(color: borderColor, width: 1)),
-        // Subtle upward shadow in light mode for depth
         boxShadow: isDark
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 16,
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
                   offset: const Offset(0, -4),
                 ),
               ],
       ),
       child: SafeArea(
-        child: NavigationBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          selectedIndex: _currentIndex,
-          animationDuration: const Duration(milliseconds: 300),
-          onDestinationSelected: (index) {
-            HapticFeedback.lightImpact();
-            context.go(_tabs[index].path);
-          },
-          destinations: _tabs.map((tab) {
-            return NavigationDestination(
-              icon: Icon(tab.icon),
-              label: tab.label,
-            );
-          }).toList(),
-          height: 60,
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_tabs.length, (index) {
+              return _NavItem(
+                icon: _tabs[index].icon,
+                label: _tabs[index].label,
+                selected: currentIndex == index,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.go(_tabs[index].path);
+                },
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primary = isDark ? AppColors.primary : AppColors.primaryLight;
+    final muted = isDark ? AppColors.muted : AppColors.lightMuted;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? primary.withValues(alpha: 0.12) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                icon,
+                key: ValueKey(selected),
+                size: 22,
+                color: selected ? primary : muted,
+              ),
+            ),
+            const SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? primary : muted,
+                letterSpacing: 0.2,
+              ),
+              child: Text(label),
+            ),
+          ],
         ),
       ),
     );
