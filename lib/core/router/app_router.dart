@@ -13,7 +13,6 @@ import '../../features/attendance/presentation/screens/drop_ins_screen.dart';
 import '../../features/attendance/presentation/screens/qr_generator_screen.dart';
 import '../../features/attendance/presentation/screens/qr_scanner_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/matches/presentation/screens/live_match_screen.dart';
 import '../../features/matches/presentation/screens/match_detail_screen.dart';
 import '../../features/matches/presentation/screens/matches_list_screen.dart';
@@ -84,11 +83,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   const shellPrefixes = ['/home', '/athletes', '/matches', '/tatami', '/techniques', '/drop-ins'];
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/login',
     redirect: (context, state) {
       final isAuth = authState.valueOrNull ?? false;
       final path = state.uri.path;
-      final isOnAuth = path.startsWith('/login') || path == '/splash';
+      final isOnAuth = path.startsWith('/login');
 
       if (!isAuth && !isOnAuth) return '/login';
       if (isAuth && path == '/login') return '/home';
@@ -104,10 +103,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/splash',
-        pageBuilder: (_, s) => _fadePage(const SplashScreen(), s),
-      ),
       GoRoute(
         path: '/login',
         pageBuilder: (_, s) => _fadePage(const LoginScreen(), s),
